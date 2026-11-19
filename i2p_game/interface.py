@@ -14,6 +14,7 @@ class Interface:
         self.pointer = (-1, -1)
         self.before_pause = 'combat'
         self.drawn_phase = None
+        self.focus_paused = False
 
     def word(self, chinese, english):
         return chinese if self.canvas.chinese else english
@@ -35,6 +36,7 @@ class Interface:
 
     def start(self):
         self.keys.clear()
+        self.focus_paused = False
         self.game.reset()
 
     def title(self):
@@ -48,13 +50,22 @@ class Interface:
         if self.game.phase in ('combat', 'prepare'):
             self.before_pause = self.game.phase
             self.game.phase = 'pause'
+            self.focus_paused = False
 
     def focus_lost(self):
-        self.pause()
+        if self.game.phase in ('combat', 'prepare'):
+            self.before_pause = self.game.phase
+            self.game.phase = 'pause'
+            self.focus_paused = True
         self.keys.clear()
 
     def resume(self):
         self.game.phase = self.before_pause
+        self.focus_paused = False
+
+    def focus_gained(self):
+        if self.focus_paused:
+            self.resume()
 
     def key_down(self, key):
         if key in self.keys:
