@@ -68,7 +68,7 @@ PURPLE = '#c9b3ff'
 RED = '#ff8580'
 
 
-class EnemyKind:
+@dataclass\nclass EnemyKind:
     hp: int
     speed: int
     base_damage: int
@@ -93,7 +93,7 @@ WAVES = (
 SPAWN_INTERVALS = (1.15, 0.94, 0.77)
 
 
-class DefenseKind:
+@dataclass\nclass DefenseKind:
     name: tuple
     description: tuple
     cost: tuple
