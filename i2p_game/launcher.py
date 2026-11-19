@@ -18,6 +18,7 @@ KEY_NAMES = {
     '[3]': '3',
 }
 
+SCANCODE_MOVEMENT_KEYS = {26: 'w', 4: 'a', 22: 's', 7: 'd'}
 
 def normalize_key(name):
     name = name.lower()
@@ -39,12 +40,20 @@ def run_pygame(pygame):
                     return
                 if event.type == pygame.KEYDOWN:
                     interface.key_down(normalize_key(pygame.key.name(event.key)))
+                    movement_key = SCANCODE_MOVEMENT_KEYS.get(getattr(event, 'scancode', None))
+                    if movement_key:
+                        interface.key_down(movement_key)
                 elif event.type == pygame.KEYUP:
                     interface.key_up(normalize_key(pygame.key.name(event.key)))
+                    movement_key = SCANCODE_MOVEMENT_KEYS.get(getattr(event, 'scancode', None))
+                    if movement_key:
+                        interface.key_up(movement_key)
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     interface.click(*event.pos)
                 elif event.type == pygame.WINDOWFOCUSLOST:
                     interface.focus_lost()
+                elif event.type == pygame.WINDOWFOCUSGAINED:
+                    interface.focus_gained()
             interface.pointer = pygame.mouse.get_pos()
             pressed = pygame.key.get_pressed()
             movement_keys = set()
@@ -76,6 +85,7 @@ def run_tkinter():
     root.bind('<KeyPress>', lambda event: interface.key_down(normalize_key(event.keysym)))
     root.bind('<KeyRelease>', lambda event: interface.key_up(normalize_key(event.keysym)))
     root.bind('<FocusOut>', lambda event: interface.focus_lost())
+    root.bind('<FocusIn>', lambda event: interface.focus_gained())
     widget.bind('<Button-1>', lambda event: interface.click(event.x, event.y))
     widget.bind('<Motion>', lambda event: setattr(interface, 'pointer', (event.x, event.y)))
     widget.bind('<Leave>', lambda event: setattr(interface, 'pointer', (-1, -1)))
