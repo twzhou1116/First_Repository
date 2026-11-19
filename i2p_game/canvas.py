@@ -1,7 +1,7 @@
 """Pygame and Tkinter drawing adapters."""
 
 from pathlib import Path
-from .artwork import ARTWORK_FILES
+from .artwork import ARTWORK_FILES, SPRITE_DOWNSAMPLE, SPRITE_SIZES
 
 class PygameCanvas:
     def __init__(self, pygame, screen):
@@ -11,6 +11,8 @@ class PygameCanvas:
             name: pygame.image.load(str(path)).convert_alpha()
             for name, path in ARTWORK_FILES.items()
         }
+        for name, size in SPRITE_SIZES.items():
+            self.art[name] = pygame.transform.smoothscale(self.art[name], size)
 
         self.font_file = (
             Path(__file__).resolve().parent.parent
@@ -86,10 +88,13 @@ class TkCanvas:
         from tkinter import PhotoImage
 
         self.canvas = canvas
-        self.art = {
-            name: PhotoImage(master=canvas, file=str(path))
-            for name, path in ARTWORK_FILES.items()
-        }
+        self.art = {}
+        for name, path in ARTWORK_FILES.items():
+            image = PhotoImage(master=canvas, file=str(path))
+            downsample = SPRITE_DOWNSAMPLE.get(name)
+            if downsample:
+                image = image.subsample(downsample, downsample)
+            self.art[name] = image
         available = set(families)
         preferred = ('Microsoft JhengHei UI', 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans CJK TC', 'WenQuanYi Zen Hei')
         self.family = next((name for name in preferred if name in available), None)
