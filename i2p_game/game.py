@@ -1,4 +1,5 @@
 """Wave progression, combat, economy, and upgrade rules."""
+from math import hypot
 
 from .config import BASE, BASE_RADIUS, BLUE, DEFENSES, ENEMY_KINDS, ENTRANCES, FIELD, MAX_BASE_HP, PADS, REPAIR_COST, REPAIR_HP, SPAWN_INTERVALS, STARTING_PLAYER_HP, UPGRADE_COST, WAVES
 from .models import Drop, Enemy, Shot, Tower
