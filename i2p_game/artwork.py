@@ -2,8 +2,23 @@
 
 from pathlib import Path
 
-ARTWORK_DIR = Path(__file__).resolve().parent.parent / "assets" / "game_art"
+ASSET_DIR = Path(__file__).resolve().parent.parent / "assets"
+ARTWORK_DIR = ASSET_DIR / "game_art"
+IMAGE_DIR = ASSET_DIR / "images"
 ARTWORK_FILES = {
-    name: ARTWORK_DIR / f"{name}.png"
-    for name in ("field", "defender", "bear", "runner", "title")
+    "field": ARTWORK_DIR / "field.png",
+    "defender": IMAGE_DIR / "NaiFrog.png",
+    "bear": IMAGE_DIR / "Bear.png",
+    "runner": ARTWORK_DIR / "runner.png",
+    "title": ARTWORK_DIR / "title.png",
+}
+
+SPRITE_SIZES = {
+    "bear": (44, 64),
+    "defender": (33, 66),
+}
+
+SPRITE_DOWNSAMPLE = {
+    "bear": 11,
+    "defender": 11,
 }
