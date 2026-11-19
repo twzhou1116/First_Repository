@@ -111,9 +111,13 @@ class Interface:
                     self.game.selected_pad = index
                     return
 
-    def tick(self, dt):
-        dx = int(bool(self.keys & {'right', 'd'})) - int(bool(self.keys & {'left', 'a'}))
-        dy = int(bool(self.keys & {'down', 's'})) - int(bool(self.keys & {'up', 'w'}))
+    def tick(self, dt, movement_keys=None):
+        keys = self.keys
+        if movement_keys is not None:
+            direction_keys = {'right', 'd', 'left', 'a', 'down', 's', 'up', 'w'}
+            keys = (self.keys - direction_keys) | set(movement_keys)
+        dx = int(bool(keys & {'right', 'd'})) - int(bool(keys & {'left', 'a'}))
+        dy = int(bool(keys & {'down', 's'})) - int(bool(keys & {'up', 'w'}))
         self.game.update(min(dt, 0.05), dx, dy)
 
     def draw_field(self):
