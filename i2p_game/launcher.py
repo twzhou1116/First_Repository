@@ -46,7 +46,17 @@ def run_pygame(pygame):
                 elif event.type == pygame.WINDOWFOCUSLOST:
                     interface.focus_lost()
             interface.pointer = pygame.mouse.get_pos()
-            interface.tick(dt)
+            pressed = pygame.key.get_pressed()
+            movement_keys = set()
+            if pressed[pygame.K_a] or pressed[pygame.K_LEFT]:
+                movement_keys.add('a')
+            if pressed[pygame.K_d] or pressed[pygame.K_RIGHT]:
+                movement_keys.add('d')
+            if pressed[pygame.K_w] or pressed[pygame.K_UP]:
+                movement_keys.add('w')
+            if pressed[pygame.K_s] or pressed[pygame.K_DOWN]:
+                movement_keys.add('s')
+            interface.tick(dt, movement_keys)
             interface.draw()
             pygame.display.flip()
     finally:
